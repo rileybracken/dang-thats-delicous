@@ -74,3 +74,11 @@ exports.resize = async (req, res, next) => {
   // once we have written the photo to our filesystem, keep going.
   return next();
 };
+
+exports.getStoreBySlug = async (req, res, next) => {
+  const store = await Store.findOne({ slug: req.params.slug });
+
+  if (!store) { return next(); }
+
+  res.render('store', { store, title: store.name });
+};
