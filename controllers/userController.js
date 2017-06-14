@@ -3,7 +3,6 @@ const User = mongoose.model('User');
 const promisify = require('es6-promisify');
 
 exports.loginForm = (req, res) => {
-  console.log('getting here');
   res.render('login', { title: 'Login' });
 };
 
@@ -47,4 +46,25 @@ exports.register = async (req, res, next) => {
 
   await register(user, req.body.password);
   next();
+};
+
+exports.account = (req, res) => {
+  res.render('account', { title: 'Edit your account' });
+};
+
+exports.updateAccount = async (req, res) => {
+  console.log('???');
+  const updates = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.id },
+    { $set: updates },
+    { new: true, runValidators: true, context: 'query' }
+  );
+
+  req.flash('success', 'Updated the profile!');
+  res.redirect('back');
 };
